@@ -5,25 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Generator</title>
     <style>
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
+
         .container {
             width: 90%;
             max-width: 600px;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.9);
             padding: 2rem;
             border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 1s ease-out;
         }
+
         h1 {
             color: #2c3e50;
             text-align: center;
@@ -32,16 +54,19 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
+
         form {
             display: flex;
             flex-direction: column;
         }
+
         label {
             font-weight: bold;
             margin-bottom: 0.5rem;
             color: #34495e;
         }
-        input[type="file"], input[type="password"], input[type="submit"] {
+
+        input[type="file"], input[type="text"], input[type="submit"] {
             width: 100%;
             padding: 12px;
             margin-bottom: 1.5rem;
@@ -50,9 +75,11 @@
             font-size: 1rem;
             transition: all 0.3s ease;
         }
+
         input[type="file"] {
             background-color: #ecf0f1;
         }
+
         input[type="submit"] {
             background-color: #3498db;
             color: white;
@@ -62,15 +89,18 @@
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
         input[type="submit"]:hover {
             background-color: #2980b9;
             transform: translateY(-2px);
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
+
         .flash-messages {
             list-style-type: none;
             padding: 0;
         }
+
         .flash-message {
             padding: 1rem;
             background-color: #e74c3c;
@@ -79,6 +109,23 @@
             border-radius: 5px;
             font-weight: bold;
             text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .api-selection {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+
+        .api-selection label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .api-selection input[type="radio"] {
+            margin-right: 0.5rem;
         }
     </style>
 </head>
@@ -97,8 +144,21 @@
         <form method="post" enctype="multipart/form-data">
             <label for="file">Upload LinkedIn PDF:</label>
             <input type="file" name="file" id="file" accept=".pdf" required>
-            <label for="api_key">OpenAI API Key:</label>
-            <input type="password" name="api_key" id="api_key" required>
+            
+            <label for="api_key">API Key:</label>
+            <input type="text" name="api_key" id="api_key" required>
+            
+            <div class="api-selection">
+                <label>
+                    <input type="radio" name="api_selection" value="openai" required>
+                    OpenAI
+                </label>
+                <label>
+                    <input type="radio" name="api_selection" value="gemini" required>
+                    Gemini
+                </label>
+            </div>
+            
             <input type="submit" value="Generate Resume">
         </form>
     </div>

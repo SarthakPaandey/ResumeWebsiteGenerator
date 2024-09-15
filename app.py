@@ -1,9 +1,10 @@
-from flask import Flask, request, render_template, send_file, flash, redirect, url_for
+from flask import Flask, request, render_template, send_file, flash, redirect
 import os
-import openai
+import google.generativeai as genai
 from PyPDF2 import PdfReader
 import io
 from werkzeug.utils import secure_filename
+from openai import OpenAI
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # For flash messages
@@ -16,13 +17,10 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        # Check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
             return redirect(request.url)
         file = request.files['file']
-        # If user does not select file, browser also
-        # submit an empty part without filename
         if file.filename == '':
             flash('No selected file')
             return redirect(request.url)
@@ -34,40 +32,49 @@ def upload_file():
                 for page in pdf_reader.pages:
                     text += page.extract_text()
 
-                # Get OpenAI API key
+                # Get API key and selected API
                 api_key = request.form['api_key']
+                selected_api = request.form['api_selection']
+
                 if not api_key:
                     flash('No API key provided')
                     return redirect(request.url)
 
-                openai.api_key = api_key
-
-                # Use OpenAI to generate HTML resume
-                try:
-                    response = openai.ChatCompletion.create(
+                if selected_api == 'openai':
+                    # Use OpenAI API
+                    client = OpenAI(api_key=api_key)
+                    response = client.chat.completions.create(
                         model="gpt-3.5-turbo",
                         messages=[
-                            {"role": "system", "content": "You are a helpful assistant that generates HTML resumes. Use the provided template structure."},
+                            {"role": "system", "content": "You are a helpful assistant that generates HTML resumes."},
                             {"role": "user", "content": f"Generate an HTML resume based on the following text extracted from a LinkedIn PDF: {text}"}
                         ]
                     )
-
-                    resume_data = response.choices[0].message['content']
-
-                    # Render the template with the generated data
-                    html_content = render_template('resume_template.html', **resume_data)
-
-                    # Save HTML content to a file
-                    filename = secure_filename(file.filename.rsplit('.', 1)[0] + '.html')
-                    with open(filename, 'w') as f:
-                        f.write(html_content)
-
-                    return send_file(filename, as_attachment=True)
-                except openai.error.OpenAIError as e:
-                    flash(f'OpenAI API error: {str(e)}')
+                    resume_data = response.choices[0].message.content
+                elif selected_api == 'gemini':
+                    # Use Gemini API
+                    genai.configure(api_key=api_key)
+                    model = genai.GenerativeModel('gemini-pro')
+                    prompt = f"Generate an HTML resume based on the following text extracted from a LinkedIn PDF: {text}"
+                    response = model.generate_content(prompt)
+                    resume_data = response.text
+                else:
+                    flash('Invalid API selection')
                     return redirect(request.url)
 
+                print("Generated resume data:", resume_data) 
+
+                
+                html_content = resume_data  
+
+                # Save HTML content to a file
+                filename = secure_filename(file.filename.rsplit('.', 1)[0] + '.html')
+                with open(filename, 'w') as f:
+                    f.write(html_content)
+
+                return send_file(filename, as_attachment=True)
             except Exception as e:
+                print(f"Detailed error: {str(e)}") 
                 flash(f'Error processing file: {str(e)}')
                 return redirect(request.url)
         else:
