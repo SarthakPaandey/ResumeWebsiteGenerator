@@ -48,17 +48,16 @@ This project implements a Resume Generator web application using Flask. The appl
 
 The main application logic is contained in the `upload_file` function:
 
-```
 ### User Interface
 
 The user interface is designed to be simple and intuitive:
 
-```
+
 ### Dependencies
 
 The project relies on several Python libraries, which are listed in the `requirements.txt` file:
 
-```
+
 ### Future Improvements
 
 1. Add more AI API options for resume generation.
