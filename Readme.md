@@ -25,8 +25,8 @@ To run this project on your local machine, follow these steps:
 
 1. Clone the repository:
    ```
-   git clone <repository-url>
-   cd <project-directory>
+   git clone https://github.com/SarthakPaandey/ResumeWebsiteGenerator
+   cd ResumeWebsiteGenerator
    ```
 
 2. Create and activate a virtual environment:
