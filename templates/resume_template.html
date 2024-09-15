@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{name}}'s Resume</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f4f8;
+        }
+        .resume-container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        h2 {
+            font-size: 1.8rem;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        .section {
+            margin-bottom: 2rem;
+        }
+        .job {
+            margin-bottom: 1.5rem;
+        }
+        .job-title {
+            font-weight: bold;
+            color: #2980b9;
+        }
+        .job-company {
+            font-style: italic;
+        }
+        .job-date {
+            color: #7f8c8d;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .contact-info {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .skill {
+            background-color: #3498db;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        <h1>{{name}}</h1>
+        <div class="contact-info">{{contact_info}}</div>
+        
+        <div class="section">
+            <h2>Summary</h2>
+            <p>{{summary}}</p>
+        </div>
+        
+        <div class="section">
+            <h2>Experience</h2>
+            {{experience|safe}}
+        </div>
+        
+        <div class="section">
+            <h2>Education</h2>
+            {{education|safe}}
+        </div>
+        
+        <div class="section">
+            <h2>Skills</h2>
+            <div class="skills">
+                {{skills|safe}}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
