@@ -132,16 +132,12 @@
 <body>
     <div class="container">
         <h1>Resume Generator</h1>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class="flash-messages">
-                    {% for message in messages %}
-                        <li class="flash-message">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-        <form method="post" enctype="multipart/form-data">
+        {% if error_message %}
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+        {% endif %}
+        <form method="post" action="/" enctype="multipart/form-data">
             <label for="file">Upload LinkedIn PDF:</label>
             <input type="file" name="file" id="file" accept=".pdf" required>
             

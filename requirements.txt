@@ -1,4 +1,6 @@
-flask
+fastapi
+uvicorn
 openai
 PyPDF2
 google-generativeai
+python-multipart
