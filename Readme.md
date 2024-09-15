@@ -3,61 +3,60 @@
 
 ## Approach and Solution
 
-This project implements a Resume Generator web application using Flask. The application allows users to upload a LinkedIn PDF, select an AI API (OpenAI or Gemini), and generate an HTML resume based on the content of the PDF.
+This project implements a Resume Generator web application using FastAPI. The application allows users to upload a LinkedIn PDF, select an AI API (OpenAI or Gemini), and generate an HTML resume based on the content of the PDF.
 
 ### Key Components
 
-1. Flask Web Application:
+1. FastAPI Web Application:
    - The main application logic is implemented in `app.py`.
    - It handles file uploads, API selection, and resume generation.
 
 2. HTML Template:
-   - The upload form is defined in `templates/upload.html`.
+   - The upload form is defined in `templates/index.html`.
    - It provides a user-friendly interface for file upload and API selection.
 
 3. Resume Template:
    - The generated resume uses a pre-defined HTML template (`templates/resume_template.html`).
    - This template ensures a consistent and professional look for all generated resumes.
 
-### Implementation Details
+### Running the Project Locally
 
-1. File Upload and Validation:
-   - The application accepts PDF files only.
-   - File validation is performed using the `allowed_file` function.
+To run this project on your local machine, follow these steps:
 
-2. PDF Text Extraction:
-   - PyPDF2 library is used to extract text from the uploaded PDF.
+1. Clone the repository:
+   ```
+   git clone <repository-url>
+   cd <project-directory>
+   ```
 
-3. AI API Integration:
-   - The application supports two AI APIs: OpenAI and Gemini.
-   - API selection is done through radio buttons in the upload form.
-   - The selected API is used to generate the resume content based on the extracted PDF text.
+2. Create and activate a virtual environment:
+   ```
+   python -m venv myenv
+   source myenv/bin/activate  # On Windows, use: myenv\Scripts\activate
+   ```
 
-4. Resume Generation:
-   - The AI-generated content is inserted into the HTML template.
-   - The resulting HTML file is saved and sent back to the user for download.
+3. Install the required dependencies:
+   ```
+   pip install -r requirements.txt
+   ```
 
-5. Error Handling:
-   - The application includes error handling for various scenarios, such as missing files, invalid file types, and API errors.
-   - Flash messages are used to communicate errors to the user.
+4. Run the FastAPI application:
+   ```
+   uvicorn app:app --reload
+   ```
 
-6. Security Considerations:
-   - The `secure_filename` function is used to ensure safe filenames.
-   - API keys are obtained from the user input rather than being hardcoded.
+5. Open your web browser and navigate to `http://127.0.0.1:8000` to access the application.
 
-### Code Structure
+### Usage
 
-The main application logic is contained in the `upload_file` function:
-
-### User Interface
-
-The user interface is designed to be simple and intuitive:
-
+1. Upload a LinkedIn PDF file.
+2. Select the AI API you want to use (OpenAI or Gemini).
+3. Enter your API key for the selected service.
+4. Click "Generate Resume" to create your HTML resume.
 
 ### Dependencies
 
-The project relies on several Python libraries, which are listed in the `requirements.txt` file:
-
+The project relies on several Python libraries, which are listed in the `requirements.txt` file.
 
 ### Future Improvements
 
