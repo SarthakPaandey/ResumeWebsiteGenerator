@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Request
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Request, Depends
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -11,6 +11,15 @@ from openai import OpenAI
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Add the CORS middleware immediately after initializing the app
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Mount the templates directory
 templates = Jinja2Templates(directory="templates")
@@ -28,7 +37,11 @@ class APIRequest(BaseModel):
     api_selection: str
 
 @app.post("/")
-async def upload_file(file: UploadFile = File(...), api_request: APIRequest = Form(...)):
+async def upload_file(
+    file: UploadFile = File(...),
+    api_key: str = Form(...),
+    api_selection: str = Form(...)
+):
     if not file:
         raise HTTPException(status_code=400, detail="No file part")
     if file.filename == '':
@@ -41,14 +54,11 @@ async def upload_file(file: UploadFile = File(...), api_request: APIRequest = Fo
             for page in pdf_reader.pages:
                 text += page.extract_text()
 
-            # Get API key and selected API
-            api_key = api_request.api_key
-            selected_api = api_request.api_selection
-
+            # Use the form data directly
             if not api_key:
                 raise HTTPException(status_code=400, detail="No API key provided")
 
-            if selected_api == 'openai':
+            if api_selection == 'openai':
                 # Use OpenAI API
                 client = OpenAI(api_key=api_key)
                 response = client.chat.completions.create(
@@ -59,7 +69,7 @@ async def upload_file(file: UploadFile = File(...), api_request: APIRequest = Fo
                     ]
                 )
                 resume_data = response.choices[0].message.content
-            elif selected_api == 'gemini':
+            elif api_selection == 'gemini':
                 # Use Gemini API
                 genai.configure(api_key=api_key)
                 model = genai.GenerativeModel('gemini-pro')
@@ -95,11 +105,3 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
