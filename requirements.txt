@@ -4,3 +4,4 @@ openai
 PyPDF2
 google-generativeai
 python-multipart
+jinja2==3.1.4
